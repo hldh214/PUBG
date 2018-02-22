@@ -4,6 +4,11 @@ PUBG
 PUBG - Yet another PUBG farming bot
 
 
+Demo
+----
+https://youtu.be/Cu3YQJptscM
+
+
 Table of Contents
 -----------------
  * [TODO](#todo)
