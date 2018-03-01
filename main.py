@@ -13,13 +13,13 @@ parser.add_argument(
     '-t', '--team',
     help='choose the type of team',
     choices=('solo', 'duo', 'squad', 'solo-squad'),
-    default='squad'
+    default='solo'
 )
 parser.add_argument(
     '-m', '--mode',
     help='operating mode',
     choices=('derank', 'bps'),
-    default='derank'
+    default='bps'
 )
 args = parser.parse_args()
 
@@ -100,7 +100,8 @@ dicts = {
     'start': pickle.load(open('dicts/start.pkl', 'rb')),
     'plane': pickle.load(open('dicts/plane.pkl', 'rb')),
     'reconnect': pickle.load(open('dicts/reconnect.pkl', 'rb')),
-    'cancel': pickle.load(open('dicts/cancel.pkl', 'rb'))
+    'cancel': pickle.load(open('dicts/cancel.pkl', 'rb')),
+    'exit_to_lobby': pickle.load(open('dicts/exit_to_lobby.pkl', 'rb'))
 }
 
 start_rect = make_relative_rect(window_rect, [50, 680, -1100, -30])
@@ -108,6 +109,7 @@ mp_plane_rect = make_relative_rect(window_rect, [214, 600, -1070, -70])
 plane_rect = make_relative_rect(window_rect, [76, 600, -1208, -70])
 reconnect_rect = make_relative_rect(window_rect, [610, 428, -607, -317])
 cancel_rect = make_relative_rect(window_rect, [670, 441, -589, -308])
+exit_to_lobby_rect = make_relative_rect(window_rect, [1095, 660, -88, -83])
 
 pwa_app = Pwa_app().connect(handle=hwnd)
 window = pwa_app.window_()
@@ -119,13 +121,20 @@ while 1:
         actions.start(args.team)
         continue
 
-    if image_compare(dicts['plane'], ImageGrab.grab(plane_rect), 'RGB') > 0.7 \
-            or image_compare(dicts['plane'], ImageGrab.grab(mp_plane_rect), 'RGB') > 0.8:
-        logging.info('quit')
-        actions.quit()
-        continue
+    if args.mode == 'derank':
+        if image_compare(dicts['plane'], ImageGrab.grab(plane_rect), 'RGB') > 0.7 \
+                or image_compare(dicts['plane'], ImageGrab.grab(mp_plane_rect), 'RGB') > 0.8 \
+                or image_compare(dicts['exit_to_lobby'], ImageGrab.grab(exit_to_lobby_rect)) > 0.8:
+            logging.info('quit')
+            actions.quit()
+            continue
+    elif args.mode == 'bps':
+        if image_compare(dicts['exit_to_lobby'], ImageGrab.grab(exit_to_lobby_rect)) > 0.8:
+            logging.info('quit')
+            actions.quit()
+            continue
 
-    if image_compare(dicts['reconnect'], ImageGrab.grab(reconnect_rect)) > 0.98:
+    if image_compare(dicts['reconnect'], ImageGrab.grab(reconnect_rect)) > 0.9:
         logging.info('reconnect')
         actions.reconnect()
         continue
