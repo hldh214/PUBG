@@ -24,7 +24,7 @@ Table of Contents
 TODO
 ----
  * more robustly (game crash, hacker, etc...)
- * pubg_ld_ng.py (work with inactive window)
+ * ng.py (work with inactive window)
 
 
 Installation
