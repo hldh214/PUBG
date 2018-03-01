@@ -15,6 +15,12 @@ parser.add_argument(
     choices=('solo', 'duo', 'squad', 'solo-squad'),
     default='squad'
 )
+parser.add_argument(
+    '-m', '--mode',
+    help='operating mode',
+    choices=('derank', 'bps'),
+    default='derank'
+)
 args = parser.parse_args()
 
 
