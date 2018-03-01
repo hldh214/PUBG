@@ -1,11 +1,21 @@
+import argparse
 import logging
 import pickle
 import Levenshtein
 from time import sleep
 from PIL import ImageGrab
-from win32gui import FindWindow, GetWindowRect
 from pywinauto import Application as Pwa_app
 from pywinauto.keyboard import SendKeys
+from win32gui import FindWindow, GetWindowRect
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    '-t', '--team',
+    help='choose the type of team',
+    choices=('solo', 'duo', 'squad', 'solo-squad'),
+    default='squad'
+)
+args = parser.parse_args()
 
 
 def image_compare(source_str, target_pic, mode='L', threshold=192):
@@ -38,13 +48,20 @@ def image_compare(source_str, target_pic, mode='L', threshold=192):
 
 
 class Actions:
+    team_coords = {
+        'solo-squad': (100, 560),
+        'squad': (100, 540),
+        'duo': (100, 520),
+        'solo': (100, 500)
+    }
+
     def __init__(self, window_obj):
         self.window = window_obj
 
-    def start(self):
-        # choose squad with double check
-        self.window.ClickInput(coords=(100, 540))
-        self.window.ClickInput(coords=(100, 540))
+    def start(self, team):
+        # choose TEAM with double check
+        self.window.ClickInput(coords=self.team_coords[team])
+        self.window.ClickInput(coords=self.team_coords[team])
 
         # START
         self.window.ClickInput(coords=(100, 700))
@@ -91,7 +108,7 @@ while 1:
     sleep(5)
     if image_compare(dicts['start'], ImageGrab.grab(start_rect)) > 0.98:
         logging.info('start')
-        actions.start()
+        actions.start(args.team)
         continue
 
     if image_compare(dicts['plane'], ImageGrab.grab(plane_rect), 'RGB') > 0.7 \
