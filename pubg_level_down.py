@@ -47,6 +47,10 @@ def image_compare(source_str, target_pic, mode='L', threshold=192):
         return Levenshtein.ratio(source_str, target_cur_str)
 
 
+def make_relative_rect(source, diff):
+    return list(map(lambda x: x[0] + x[1], zip(source, diff)))
+
+
 class Actions:
     team_coords = {
         'solo-squad': (100, 560),
@@ -75,8 +79,6 @@ class Actions:
         self.window.ClickInput(coords=(570, 420))
 
     def reconnect(self):
-        # loading issue
-        sleep(5)
         self.window.ClickInput(coords=(640, 430))
 
     def cancel(self):
@@ -95,11 +97,11 @@ dicts = {
     'cancel': pickle.load(open('dicts/cancel.pkl', 'rb'))
 }
 
-start_rect = list(map(lambda x: x[0] + x[1], zip(window_rect, [50, 680, -1100, -30])))
-mp_plane_rect = list(map(lambda x: x[0] + x[1], zip(window_rect, [214, 600, -1070, -70])))
-plane_rect = list(map(lambda x: x[0] + x[1], zip(window_rect, [76, 600, -1208, -70])))
-reconnect_rect = list(map(lambda x: x[0] + x[1], zip(window_rect, [590, 420, -590, -310])))
-cancel_rect = list(map(lambda x: x[0] + x[1], zip(window_rect, [670, 441, -589, -308])))
+start_rect = make_relative_rect(window_rect, [50, 680, -1100, -30])
+mp_plane_rect = make_relative_rect(window_rect, [214, 600, -1070, -70])
+plane_rect = make_relative_rect(window_rect, [76, 600, -1208, -70])
+reconnect_rect = make_relative_rect(window_rect, [610, 428, -607, -317])
+cancel_rect = make_relative_rect(window_rect, [670, 441, -589, -308])
 
 pwa_app = Pwa_app().connect(handle=hwnd)
 window = pwa_app.window_()
