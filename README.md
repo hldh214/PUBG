@@ -23,8 +23,8 @@ Table of Contents
 
 TODO
 ----
- * more configurations
- * more robustly
+ * more robustly (game crash, hacker, etc...)
+ * pubg_ld_ng.py (work with inactive window)
 
 
 Installation
@@ -40,7 +40,7 @@ pip install -r ./requirements.txt
 Usage
 -----
 ```shell
-python ./pubg_level_down.py
+python ./pubg_level_down.py -h
 ```
 
 
