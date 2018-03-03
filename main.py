@@ -2,11 +2,13 @@ import argparse
 import logging
 import pickle
 import Levenshtein
-from time import sleep
+from time import sleep, time
 from PIL import ImageGrab
 from pywinauto import Application as Pwa_app
 from pywinauto.keyboard import SendKeys
-from win32gui import FindWindow, GetWindowRect, SetForegroundWindow
+from win32gui import FindWindow, GetWindowRect
+from random import randint
+from pyautogui import keyDown, keyUp, press
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -76,6 +78,24 @@ class Actions:
         # START
         self.window.ClickInput(coords=(100, 700))
 
+    def autoplay(self):
+        wait_for_plane = randint(15, 40)
+        #print('Time selected was {} seconds'.format(wait_for_plane))
+        sleep(wait_for_plane)
+        press('f')
+        #print('f was hit')
+        timeout = time() + 285 - wait_for_plane
+        keyDown('w')
+        keyDown('space')
+        while True:
+            if time() >= timeout:
+                #print("stopped")
+                keyUp('w')
+                keyUp('space')
+                press('s')
+                sleep(1)
+                break
+
     def quit(self):
         # esc
         SendKeys('{ESC}')
@@ -94,7 +114,6 @@ class Actions:
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 hwnd = FindWindow('UnrealWindow', None)
-SetForegroundWindow(hwnd)
 window_rect = [each for each in GetWindowRect(hwnd)]
 
 dicts = {
@@ -130,10 +149,16 @@ while 1:
             actions.quit()
             continue
     elif args.mode == 'bps':
-        if image_compare(dicts['exit_to_lobby'], ImageGrab.grab(exit_to_lobby_rect)) > 0.8:
+        if image_compare(dicts['plane'], ImageGrab.grab(plane_rect), 'RGB') > 0.7:
+            actions.autoplay()
+            #print("AUTOPLAY BREAK OUT ")
             logging.info('quit')
-            actions.quit()
+            actions.quit() 
             continue
+        #if image_compare(dicts['exit_to_lobby'], ImageGrab.grab(exit_to_lobby_rect)) > 0.8:
+            #logging.info('quit')
+            #actions.quit()
+            #continue
 
     if image_compare(dicts['reconnect'], ImageGrab.grab(reconnect_rect)) > 0.9:
         logging.info('reconnect')
