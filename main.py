@@ -82,12 +82,12 @@ class Actions:
         self.window.ClickInput(coords=(100, 700))
 
     def autoplay(self):
-        wait_for_plane = randint(15, 20)
+        wait_for_plane = randint(15, 40)
         #print('Time selected was {} seconds'.format(wait_for_plane))
         sleep(wait_for_plane)
         press('f')
         #print('f was hit')
-        timeout = time() + 100 - wait_for_plane
+        timeout = time() + 285 - wait_for_plane
         keyDown('w')
         keyDown('space')
         while True:
