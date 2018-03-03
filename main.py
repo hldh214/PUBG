@@ -9,6 +9,8 @@ from pywinauto.keyboard import SendKeys
 from win32gui import FindWindow, GetWindowRect
 from random import randint
 from pyautogui import keyDown, keyUp, press
+from urllib import request,parse
+from os import system
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -25,7 +27,8 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-
+roundCount = 0
+bpCount = 0
 def image_compare(source_str, target_pic, mode='L', threshold=192):
     target = target_pic.convert(mode)
     target_size = target.size
@@ -79,12 +82,12 @@ class Actions:
         self.window.ClickInput(coords=(100, 700))
 
     def autoplay(self):
-        wait_for_plane = randint(15, 40)
+        wait_for_plane = randint(15, 20)
         #print('Time selected was {} seconds'.format(wait_for_plane))
         sleep(wait_for_plane)
         press('f')
         #print('f was hit')
-        timeout = time() + 285 - wait_for_plane
+        timeout = time() + 100 - wait_for_plane
         keyDown('w')
         keyDown('space')
         while True:
@@ -110,6 +113,20 @@ class Actions:
     def cancel(self):
         self.window.ClickInput(coords=(670, 440))
 
+    def wechatPush(self, roundCount):#http://sc.ftqq.com/3.version
+        global bpCount
+        bpCount = bpCount + 60
+        while bpCount >= 1000:
+            sckey = "xxxxxxxxxxxxxxxxxxxxxxxxxx"#input your sckey
+            tile = 'PUBG打金脚本提醒'
+            bps = '又有1000BP点到手,当前共获得{}BP点.'.format(roundCount * 60)
+            textmod = {'text':tile,'desp':bps}
+            textmod = parse.urlencode(textmod)
+            urlsc = 'https://sc.ftqq.com/%s.send' % (sckey)
+            req = request.Request(url = '%s%s%s' % (urlsc,'?',textmod))
+            request.urlopen(req)
+            bpCount = bpCount - 1000
+            break
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
@@ -138,6 +155,7 @@ while 1:
     sleep(5)
     if image_compare(dicts['start'], ImageGrab.grab(start_rect)) > 0.98:
         logging.info('start')
+        roundCount=roundCount + 1
         actions.start(args.team)
         continue
 
@@ -151,7 +169,8 @@ while 1:
     elif args.mode == 'bps':
         if image_compare(dicts['plane'], ImageGrab.grab(plane_rect), 'RGB') > 0.7:
             actions.autoplay()
-            #print("AUTOPLAY BREAK OUT ")
+            print('Round {} conplite'.format(roundCount))
+            actions.wechatPush(roundCount)
             logging.info('quit')
             actions.quit() 
             continue
