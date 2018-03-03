@@ -40,7 +40,10 @@ pip install -r ./requirements.txt
 Usage
 -----
 ```shell
-python ./pubg_level_down.py -h
+# game settings:
+# resolution: 1280 * 720 (Windowed)
+# language: English
+python ./main.py -h
 ```
 
 
