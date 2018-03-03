@@ -2,3 +2,4 @@ python-Levenshtein==0.12.0
 Pillow==4.3.0
 pywinauto==0.6.4
 win32gui==221.6
+pyautogui
