@@ -6,7 +6,7 @@ from time import sleep
 from PIL import ImageGrab
 from pywinauto import Application as Pwa_app
 from pywinauto.keyboard import SendKeys
-from win32gui import FindWindow, GetWindowRect
+from win32gui import FindWindow, GetWindowRect, SetForegroundWindow
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -94,6 +94,7 @@ class Actions:
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 hwnd = FindWindow('UnrealWindow', None)
+SetForegroundWindow(hwnd)
 window_rect = [each for each in GetWindowRect(hwnd)]
 
 dicts = {
