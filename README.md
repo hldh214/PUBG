@@ -34,6 +34,7 @@ git clone https://github.com/hldh214/PUBG.git
 cd ./PUBG
 # https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-levenshtein
 pip install -r ./requirements.txt
+cp config.sample.json config.json
 ```
 
 
