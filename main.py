@@ -88,11 +88,14 @@ class Actions:
         keyDown('w')
         keyDown('space')
         while True:
+            sleep(5)
             if time() >= timeout:
                 keyUp('w')
                 keyUp('space')
                 press('s')
-                sleep(1)
+                break
+            elif image_compare(dicts['exit_to_lobby'], ImageGrab.grab(exit_to_lobby_rect)) > 0.8:
+                self.quit()
                 break
 
     def quit(self):
@@ -173,20 +176,18 @@ while 1:
         actions.start(args.team)
         continue
 
-    if args.mode == 'derank':
-        if image_compare(dicts['plane'], ImageGrab.grab(plane_rect), 'RGB') > 0.7 \
-                or image_compare(dicts['plane'], ImageGrab.grab(mp_plane_rect), 'RGB') > 0.8 \
-                or image_compare(dicts['exit_to_lobby'], ImageGrab.grab(exit_to_lobby_rect)) > 0.8:
-            verboseprint('quit')
-            actions.quit()
-            continue
-    elif args.mode == 'bps':
-        if image_compare(dicts['plane'], ImageGrab.grab(plane_rect), 'RGB') > 0.7 \
-                or image_compare(dicts['plane'], ImageGrab.grab(mp_plane_rect), 'RGB') > 0.8:
+    if image_compare(dicts['exit_to_lobby'], ImageGrab.grab(exit_to_lobby_rect)) > 0.8:
+        verboseprint('quit')
+        actions.quit()
+        continue
+
+    if image_compare(dicts['plane'], ImageGrab.grab(plane_rect), 'RGB') > 0.7 \
+            or image_compare(dicts['plane'], ImageGrab.grab(mp_plane_rect), 'RGB') > 0.8:
+        if args.mode == 'bps':
             actions.autoplay()
-            verboseprint('quit')
-            actions.quit()
-            continue
+        verboseprint('quit')
+        actions.quit()
+        continue
 
     if image_compare(dicts['reconnect'], ImageGrab.grab(reconnect_rect)) > 0.9:
         verboseprint('reconnect')
