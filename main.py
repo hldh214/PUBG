@@ -80,6 +80,17 @@ class Actions:
         # START
         self.window.ClickInput(coords=(100, 700))
 
+        # refresh lobby if necessary (#4)
+        times = 0
+        while times < 10:
+            sleep(3)
+            if image_compare(dicts['tl_pubg_logo'], ImageGrab.grab(tl_pubg_logo_rect)) > 0.9:
+                times += 1
+            else:
+                return None
+
+        self.quit()
+
     def autoplay(self):
         wait_for_plane = randint(15, 40)
         sleep(wait_for_plane)
@@ -153,7 +164,8 @@ dicts = {
     'plane': pickle.load(open('dicts/plane.pkl', 'rb')),
     'reconnect': pickle.load(open('dicts/reconnect.pkl', 'rb')),
     'cancel': pickle.load(open('dicts/cancel.pkl', 'rb')),
-    'exit_to_lobby': pickle.load(open('dicts/exit_to_lobby.pkl', 'rb'))
+    'exit_to_lobby': pickle.load(open('dicts/exit_to_lobby.pkl', 'rb')),
+    'tl_pubg_logo': pickle.load(open('dicts/tl_pubg_logo.pkl', 'rb'))
 }
 
 start_rect = make_relative_rect(window_rect, [50, 680, -1100, -30])
@@ -162,11 +174,12 @@ plane_rect = make_relative_rect(window_rect, [76, 600, -1208, -70])
 reconnect_rect = make_relative_rect(window_rect, [609, 447, -610, -299])
 cancel_rect = make_relative_rect(window_rect, [670, 441, -589, -308])
 exit_to_lobby_rect = make_relative_rect(window_rect, [1095, 660, -88, -83])
+tl_pubg_logo_rect = make_relative_rect(window_rect, [58, 58, -1205, -684])
 
 pwa_app = Pwa_app().connect(handle=hwnd)
 window = pwa_app.window_()
 actions = Actions(window)
-while 1:
+while True:
     sleep(5)
     if image_compare(dicts['start'], ImageGrab.grab(start_rect)) > 0.98:
         verboseprint('start')
