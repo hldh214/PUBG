@@ -85,7 +85,7 @@ class Actions:
         times = 0
         while times < 10:
             sleep(3)
-            if image_compare(dicts['tl_pubg_logo'], ImageGrab.grab(tl_pubg_logo_rect)) > 0.9:
+            if image_compare(dicts['tl_pubg_logo'], ImageGrab.grab(tl_pubg_logo_rect), 'L', 70) > 0.9:
                 times += 1
             else:
                 return None
