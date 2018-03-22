@@ -204,8 +204,8 @@ while True:
         actions.quit()
         continue
 
-    if image_compare(dicts['reconnect'], ImageGrab.grab(reconnect_rect)) > 0.9 \
-            or image_compare(dicts['reconnect'], ImageGrab.grab(reconnect_ng_rect)) > 0.9:
+    if image_compare(dicts['reconnect'], ImageGrab.grab(reconnect_rect)) > 0.8 \
+            or image_compare(dicts['reconnect'], ImageGrab.grab(reconnect_ng_rect)) > 0.8:
         verboseprint('reconnect')
         actions.reconnect()
         continue
