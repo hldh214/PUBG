@@ -166,7 +166,8 @@ dicts = {
     'reconnect': pickle.load(open('dicts/reconnect.pkl', 'rb')),
     'cancel': pickle.load(open('dicts/cancel.pkl', 'rb')),
     'exit_to_lobby': pickle.load(open('dicts/exit_to_lobby.pkl', 'rb')),
-    'tl_pubg_logo': pickle.load(open('dicts/tl_pubg_logo.pkl', 'rb'))
+    'tl_pubg_logo': pickle.load(open('dicts/tl_pubg_logo.pkl', 'rb')),
+    'timeout': pickle.load(open('dicts/timeout.pkl', 'rb'))
 }
 
 start_rect = make_relative_rect(window_rect, [50, 680, -1100, -30])
@@ -174,6 +175,7 @@ mp_plane_rect = make_relative_rect(window_rect, [214, 600, -1070, -70])
 plane_rect = make_relative_rect(window_rect, [76, 600, -1208, -70])
 reconnect_rect = make_relative_rect(window_rect, [609, 430, -610, -317])
 reconnect_ng_rect = make_relative_rect(window_rect, [609, 447, -610, -300])
+timeout_rect = make_relative_rect(window_rect, [644, 438, -634, -303])
 cancel_rect = make_relative_rect(window_rect, [670, 441, -589, -308])
 exit_to_lobby_rect = make_relative_rect(window_rect, [1095, 660, -88, -83])
 tl_pubg_logo_rect = make_relative_rect(window_rect, [58, 58, -1205, -684])
@@ -205,7 +207,8 @@ while True:
         continue
 
     if image_compare(dicts['reconnect'], ImageGrab.grab(reconnect_rect)) > 0.8 \
-            or image_compare(dicts['reconnect'], ImageGrab.grab(reconnect_ng_rect)) > 0.8:
+            or image_compare(dicts['reconnect'], ImageGrab.grab(reconnect_ng_rect)) > 0.8 \
+            or image_compare(dicts['timeout'], ImageGrab.grab(timeout_rect)) > 0.8:
         verboseprint('reconnect')
         actions.reconnect()
         continue
