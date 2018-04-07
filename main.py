@@ -8,7 +8,7 @@ from time import sleep, time
 from PIL import ImageGrab
 from pywinauto import Application as Pwa_app
 from pywinauto.keyboard import SendKeys
-from win32gui import FindWindow, GetWindowRect, SetForegroundWindow
+from win32gui import ClientToScreen, FindWindow, GetClientRect, SetForegroundWindow
 from random import randint
 from pyautogui import keyDown, keyUp, press
 
@@ -158,8 +158,10 @@ round_count = 0
 
 hwnd = FindWindow('UnrealWindow', None)
 SetForegroundWindow(hwnd)
-window_rect = [each for each in GetWindowRect(hwnd)]
-
+_left, _top, _right, _bottom = GetClientRect(hwnd)
+left, top = ClientToScreen(hwnd, (_left, _top))
+right, bottom = ClientToScreen(hwnd, (_right, _bottom))
+window_rect = [left, top, right, bottom]
 dicts = {
     'start': pickle.load(open('dicts/start.pkl', 'rb')),
     'plane': pickle.load(open('dicts/plane.pkl', 'rb')),
@@ -170,15 +172,15 @@ dicts = {
     'timeout': pickle.load(open('dicts/timeout.pkl', 'rb'))
 }
 
-start_rect = make_relative_rect(window_rect, [50, 680, -1100, -30])
-mp_plane_rect = make_relative_rect(window_rect, [214, 600, -1070, -70])
-plane_rect = make_relative_rect(window_rect, [76, 600, -1208, -70])
-reconnect_rect = make_relative_rect(window_rect, [609, 430, -610, -317])
-reconnect_ng_rect = make_relative_rect(window_rect, [609, 447, -610, -300])
-timeout_rect = make_relative_rect(window_rect, [644, 438, -634, -303])
-cancel_rect = make_relative_rect(window_rect, [670, 441, -589, -308])
-exit_to_lobby_rect = make_relative_rect(window_rect, [1095, 660, -88, -83])
-tl_pubg_logo_rect = make_relative_rect(window_rect, [58, 58, -1205, -684])
+start_rect = make_relative_rect(window_rect, [42, 649, -1092, -22])
+mp_plane_rect = make_relative_rect(window_rect, [206, 569, -1062, -62])
+plane_rect = make_relative_rect(window_rect, [68, 569, -1200, -62])
+reconnect_rect = make_relative_rect(window_rect, [601, 399, -602, -309])
+reconnect_ng_rect = make_relative_rect(window_rect, [601, 416, -602, -292])
+timeout_rect = make_relative_rect(window_rect, [636, 407, -626, -295])
+cancel_rect = make_relative_rect(window_rect, [662, 410, -581, -300])
+exit_to_lobby_rect = make_relative_rect(window_rect, [1087, 629, -80, -75])
+tl_pubg_logo_rect = make_relative_rect(window_rect, [50, 27, -1197, -676])
 
 pwa_app = Pwa_app().connect(handle=hwnd)
 window = pwa_app.window_()
