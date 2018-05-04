@@ -44,7 +44,7 @@ Usage
 # game settings:
 # resolution: 1280 * 720 (Windowed)
 # language: English
-# you may need run as administrator
+# you may need choose TEAM manually && run as administrator
 python ./main.py -h
 ```
 
