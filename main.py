@@ -63,22 +63,12 @@ class Notify:
 
 
 class Actions:
-    team_coords = {
-        'solo-squad': (100, 560),
-        'squad': (100, 540),
-        'duo': (100, 520),
-        'solo': (100, 500)
-    }
-
     def __init__(self, window_obj):
         self.window = window_obj
 
-    def start(self, team):
-        # choose TEAM with double check
-        self.window.ClickInput(coords=self.team_coords[team])
-        self.window.ClickInput(coords=self.team_coords[team])
-
-        # START
+    def start(self):
+        # START with double check
+        self.window.ClickInput(coords=(100, 700))
         self.window.ClickInput(coords=(100, 700))
 
         # refresh lobby if necessary (#4)
@@ -127,12 +117,6 @@ class Actions:
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    '-t', '--team',
-    help='choose the type of team',
-    choices=('solo', 'duo', 'squad', 'solo-squad'),
-    default='solo'
-)
-parser.add_argument(
     '-m', '--mode',
     help='operating mode',
     choices=('derank', 'bps'),
@@ -172,9 +156,9 @@ dicts = {
     'timeout': pickle.load(open('dicts/timeout.pkl', 'rb'))
 }
 
-start_rect = make_relative_rect(window_rect, [42, 649, -1092, -22])
-mp_plane_rect = make_relative_rect(window_rect, [206, 569, -1062, -62])
-plane_rect = make_relative_rect(window_rect, [68, 569, -1200, -62])
+start_rect = make_relative_rect(window_rect, [106, 649, -1092, -41])
+mp_plane_rect = make_relative_rect(window_rect, [217, 569, -1051, -62])
+plane_rect = make_relative_rect(window_rect, [79, 569, -1189, -62])
 reconnect_rect = make_relative_rect(window_rect, [601, 399, -602, -309])
 reconnect_ng_rect = make_relative_rect(window_rect, [601, 416, -602, -292])
 timeout_rect = make_relative_rect(window_rect, [636, 407, -626, -295])
@@ -187,12 +171,12 @@ window = pwa_app.window_()
 actions = Actions(window)
 while True:
     sleep(5)
-    if image_compare(dicts['start'], ImageGrab.grab(start_rect)) > 0.98:
+    if image_compare(dicts['start'], ImageGrab.grab(start_rect), threshold=10) > 0.98:
         verboseprint('start')
         round_count = round_count + 1
         if round_count % 10 == 0:
             notify.method('Starting the {0}th game'.format(round_count))
-        actions.start(args.team)
+        actions.start()
         continue
 
     if image_compare(dicts['exit_to_lobby'], ImageGrab.grab(exit_to_lobby_rect)) > 0.8:
