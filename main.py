@@ -82,23 +82,28 @@ class Actions:
 
         self.quit()
 
-    def autoplay(self):
-        wait_for_plane = randint(15, 40)
-        sleep(wait_for_plane)
-        press('f')
-        timeout = time() + 285 - wait_for_plane
-        keyDown('w')
-        keyDown('space')
-        while True:
-            sleep(5)
-            if time() >= timeout:
-                keyUp('w')
-                keyUp('space')
-                press('s')
-                break
-            elif image_compare(dicts['exit_to_lobby'], ImageGrab.grab(exit_to_lobby_rect)) > 0.8:
-                self.quit()
-                break
+    def autoplay(self, mode):
+        if mode == 'war':
+            keyDown('w')
+            sleep(360)
+            keyUp('w')
+        else:
+            wait_for_plane = randint(15, 40)
+            sleep(wait_for_plane)
+            press('f')
+            timeout = time() + 285 - wait_for_plane
+            keyDown('w')
+            keyDown('space')
+            while True:
+                sleep(5)
+                if time() >= timeout:
+                    keyUp('w')
+                    keyUp('space')
+                    press('s')
+                    break
+                elif image_compare(dicts['exit_to_lobby'], ImageGrab.grab(exit_to_lobby_rect)) > 0.8:
+                    self.quit()
+                    break
 
     def quit(self):
         # esc
@@ -119,7 +124,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     '-m', '--mode',
     help='operating mode',
-    choices=('derank', 'bps'),
+    choices=('derank', 'bps', 'war'),
     default='bps'
 )
 parser.add_argument(
@@ -148,15 +153,18 @@ right, bottom = ClientToScreen(hwnd, (_right, _bottom))
 window_rect = [left, top, right, bottom]
 dicts = {
     'start': pickle.load(open('dicts/start.pkl', 'rb')),
+    'war_start': pickle.load(open('dicts/war_start.pkl', 'rb')),
     'plane': pickle.load(open('dicts/plane.pkl', 'rb')),
     'reconnect': pickle.load(open('dicts/reconnect.pkl', 'rb')),
     'cancel': pickle.load(open('dicts/cancel.pkl', 'rb')),
     'exit_to_lobby': pickle.load(open('dicts/exit_to_lobby.pkl', 'rb')),
     'tl_pubg_logo': pickle.load(open('dicts/tl_pubg_logo.pkl', 'rb')),
-    'timeout': pickle.load(open('dicts/timeout.pkl', 'rb'))
+    'timeout': pickle.load(open('dicts/timeout.pkl', 'rb')),
+    'war_countdown': pickle.load(open('dicts/war_countdown.pkl', 'rb'))
 }
 
 start_rect = make_relative_rect(window_rect, [106, 649, -1092, -41])
+war_start_rect = make_relative_rect(window_rect, [85, 670, -1147, -30])
 mp_plane_rect = make_relative_rect(window_rect, [217, 569, -1051, -62])
 plane_rect = make_relative_rect(window_rect, [79, 569, -1189, -62])
 reconnect_rect = make_relative_rect(window_rect, [601, 399, -602, -309])
@@ -165,13 +173,15 @@ timeout_rect = make_relative_rect(window_rect, [636, 407, -626, -295])
 cancel_rect = make_relative_rect(window_rect, [662, 410, -581, -300])
 exit_to_lobby_rect = make_relative_rect(window_rect, [1087, 629, -80, -75])
 tl_pubg_logo_rect = make_relative_rect(window_rect, [50, 27, -1197, -676])
+war_countdown_rect = make_relative_rect(window_rect, [1230, 214, -15, -494])
 
 pwa_app = Pwa_app().connect(handle=hwnd)
 window = pwa_app.window_()
 actions = Actions(window)
 while True:
     sleep(5)
-    if image_compare(dicts['start'], ImageGrab.grab(start_rect), threshold=10) > 0.98:
+    if image_compare(dicts['start'], ImageGrab.grab(start_rect), threshold=10) > 0.98 \
+            or image_compare(dicts['war_start'], ImageGrab.grab(war_start_rect), threshold=200) > 0.98:
         verboseprint('start')
         round_count = round_count + 1
         if round_count % 10 == 0:
@@ -187,7 +197,13 @@ while True:
     if image_compare(dicts['plane'], ImageGrab.grab(plane_rect), 'RGB') > 0.7 \
             or image_compare(dicts['plane'], ImageGrab.grab(mp_plane_rect), 'RGB') > 0.8:
         if args.mode == 'bps':
-            actions.autoplay()
+            actions.autoplay('bps')
+        verboseprint('quit')
+        actions.quit()
+        continue
+
+    if image_compare(dicts['war_countdown'], ImageGrab.grab(war_countdown_rect), threshold=200) > 0.8:
+        actions.autoplay('war')
         verboseprint('quit')
         actions.quit()
         continue
