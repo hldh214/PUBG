@@ -111,7 +111,7 @@ class Actions:
         # leave
         self.window.ClickInput(coords=(600, 440))
         # confirm
-        self.window.ClickInput(coords=(570, 420))
+        self.window.ClickInput(coords=(570, 460))
 
     def reconnect(self):
         self.window.ClickInput(coords=(640, 450))
@@ -180,7 +180,7 @@ window = pwa_app.window_()
 actions = Actions(window)
 while True:
     sleep(5)
-    if image_compare(dicts['start'], ImageGrab.grab(start_rect), threshold=10) > 0.98 \
+    if image_compare(dicts['start'], ImageGrab.grab(start_rect), threshold=10) > 0.9 \
             or image_compare(dicts['war_start'], ImageGrab.grab(war_start_rect), threshold=200) > 0.98:
         verboseprint('start')
         round_count = round_count + 1
