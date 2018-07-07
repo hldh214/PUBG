@@ -1,4 +1,4 @@
-PUBG
+PUBG(deprecated)
 =====================
 
 PUBG - Yet another PUBG farming bot
